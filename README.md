@@ -15,6 +15,7 @@ You need to clone the repository. If you have [`docker`](https://docs.docker.com
 ```
 
 # References
+* [Markdown Cheatsheet](https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet)
 * [Pandoc](https://pandoc.org/)
 * [Pandoc for scholars](https://pandoc-scholar.github.io/)
 * [Pandoc markdown lecture template](https://github.com/cagix/pandoc-lecture)
