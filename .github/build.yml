@@ -1,0 +1,45 @@
+name: Pandoc
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository and submodules
+      uses: actions/checkout@v2
+      with:
+        submodules: recursive
+    - name: mkdir
+      run: |
+       mkdir public
+       
+    - name: Generate PDF with Pandoc
+      uses: docker://rstropek/pandoc-latex:2.16.2
+      with:
+        args: "--to pdf --from markdown+tex_math_single_backslash-autolink_bare_uris --output src/document.pdf --template template/eisvogel.tex --self-contained --listings --highlight-style tango --pdf-engine xelatex --citeproc src/document.md"
+
+    - name: Archive production artifacts
+      uses: actions/upload-artifact@master
+      with:
+        name: document
+        path: |
+          src/document.pdf
+          src/preview.png
+    - name: Commit files
+      run: |
+        git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git commit -m "Add changes" -a
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
